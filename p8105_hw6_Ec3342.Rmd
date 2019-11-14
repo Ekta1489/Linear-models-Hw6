@@ -1,0 +1,10 @@
+---
+title: "p8105_Hw6_Ec3342"
+author: "Ekta Chaudhary"
+date: "14/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
