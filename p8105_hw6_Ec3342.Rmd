@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
 ```
+#Reading the data set and tidying the data. Converted the numeric to factor variables. Removed pnumlbw, pnumsga, malform as these variables had a value of 0 for all the observations.So, there was no point keeping these variables in the dataset.
 
 ```{r}
 baby_data = read_csv(file = "./data/birthweight.csv") %>%
@@ -22,3 +23,13 @@ baby_data = read_csv(file = "./data/birthweight.csv") %>%
   ) %>%
   select(-pnumlbw, -pnumsga, -malform)
 ```
+
+#Checking if there are any missing variables. After running the code, we see that there are no missing variables; Therefore, we do not have to do anything more to clean the data.
+
+```{r}
+filter_all(
+  baby_data, any_vars(is.na(.))
+)
+```
+#Propose a regression model for birthweight. As the outcome is continuous, we can fit a linear regression model. 
+
