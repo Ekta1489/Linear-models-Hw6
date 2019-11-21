@@ -33,3 +33,20 @@ filter_all(
 ```
 #Propose a regression model for birthweight. As the outcome is continuous, we can fit a linear regression model. 
 
+
+```{r}
+
+reg_mod = lm(bwt ~ gaweeks + babysex + momage + mrace  + wtgain + smoken, data = baby_data)
+reg_mod %>% 
+  broom::tidy() 
+
+```
+```{r}
+baby_data %>% 
+  modelr::add_predictions(reg_mod) %>% 
+  modelr::add_residuals(reg_mod) %>% 
+  ggplot(aes(x = pred, y = resid)) + geom_point() +
+  labs(x = "Predicted value", 
+       y = "Residual")
+```
+
