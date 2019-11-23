@@ -12,9 +12,12 @@ library(readxl)
 library(modelr)
 library(p8105.datasets)
 ```
+# Question 1
+
 #Reading the data set and tidying the data. Converted the numeric to factor variables. Removed pnumlbw, pnumsga, malform as these variables had a value of 0 for all the observations.So, there was no point keeping these variables in the dataset.
 
 ```{r}
+
 baby_data = read_csv(file = "./data/birthweight.csv") %>%
   janitor::clean_names() %>%
   mutate(
@@ -24,16 +27,24 @@ baby_data = read_csv(file = "./data/birthweight.csv") %>%
     mrace = as.factor(mrace)
   ) %>%
   select(-pnumlbw, -pnumsga, -malform)
+
 ```
 
 #Checking if there are any missing variables. After running the code, we see that there are no missing variables; Therefore, we do not have to do anything more to clean the data.
 
 ```{r}
+
 filter_all(
   baby_data, any_vars(is.na(.))
 )
+
 ```
-#Propose a regression model for birthweight. As the outcome is continuous, we can fit a linear regression model. 
+
+#Propose a regression model for birthweight. 
+
+#As the outcome (baby's birthweight) is continuous, we can fit a linear regression model. 
+
+#Baby's birthweight is associated with Gestational age in weeks. I have included baby's sex, mom's age, mom's race, mom's weight gain and average number of cigarettes smoked per day during pregnancy as these variables can be associated with baby's birthweight.
 
 ```{r}
 
@@ -62,12 +73,15 @@ baby_data %>%
 
 ```{r}
 
-model_2 = lm(bwt ~ blength + gaweeks, data = baby_data) # Using length at birth and gestational age as predictors (main effects only)
+model_2 = lm(bwt ~ blength + gaweeks, data = baby_data) 
+#In model 2, using length at birth and gestational age as predictors (main effects only)
 
-model_3 = lm(bwt ~ bhead + babysex + blength + bhead * babysex * blength, data = baby_data) #using head circumference, length, sex, and all interactions (including the three-way interaction) between these
+model_3 = lm(bwt ~ bhead + babysex + blength + bhead * babysex * blength, data = baby_data) 
+#In model 3, using head circumference, length, sex, and all interactions (including the three-way interaction) between these
 
 ```
-Cross validation
+
+#Make this comparison in terms of the cross-validated prediction error; use crossv_mc and functions in purrr as appropriate.
 
 ```{r}
 set.seed(1)
@@ -87,14 +101,14 @@ cv_df =
 cross_validation = 
   cv_df %>% 
   mutate(
+    model_1 = map(
+      train, ~ lm(bwt ~ gaweeks + babysex + momage + mrace  + wtgain + smoken, data = .x)
+      ),
     model_2 = map(
       train, ~ lm(bwt ~ blength + gaweeks, data = .x)
       ),
     model_3 = map(
       train, ~ lm(bwt ~ bhead + babysex + blength + bhead * babysex * blength, data = .x)
-      ),
-    model_1 = map(
-      train, ~ lm(bwt ~ gaweeks + babysex + momage + mrace  + wtgain + smoken, data = .x)
       )
     ) %>% 
   mutate(
@@ -112,6 +126,7 @@ cross_validation =
 ```
 
 ```{r}
+
 cross_validation %>% 
   select(
     starts_with("rmse")
@@ -132,8 +147,17 @@ cross_validation %>%
     x = "Model",
     y = "RMSE"
   )
+
 ```
+#Based on the violen plots above, we can see that the third model i.e. the model with three way interaction is the best model because it has the minimum RMSE.  
+
+
+# Question 2
+
+#The code chunk below (adapted from the course website) will download these data.
+
 ```{r}
+
 weather_df = 
   rnoaa::meteo_pull_monitors(
     c("USW00094728"),
@@ -145,5 +169,6 @@ weather_df =
     tmin = tmin / 10,
     tmax = tmax / 10) %>%
   select(name, id, everything())
+
 ```
 
