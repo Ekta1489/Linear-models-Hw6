@@ -61,7 +61,7 @@ model_1 %>%
 baby_data %>% 
   modelr::add_predictions(model_1) %>% 
   modelr::add_residuals(model_1) %>% 
-  ggplot(aes(x = pred, y = resid)) + geom_point() +
+  ggplot(aes(x = pred, y = resid)) + geom_point() + 
   labs(x = "Predicted value", 
        y = "Residual")
 
@@ -149,6 +149,7 @@ cross_validation %>%
   )
 
 ```
+
 #Based on the violen plots above, we can see that the third model i.e. the model with three way interaction is the best model because it has the minimum RMSE.  
 
 
