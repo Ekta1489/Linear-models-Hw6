@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
 library(modelr)
+library(p8105.datasets)
 ```
 #Reading the data set and tidying the data. Converted the numeric to factor variables. Removed pnumlbw, pnumsga, malform as these variables had a value of 0 for all the observations.So, there was no point keeping these variables in the dataset.
 
@@ -41,6 +42,9 @@ model_1 %>%
   broom::tidy() 
 
 ```
+
+#Show a plot of model residuals against fitted values – use add_predictions and add_residuals in making this plot.
+
 ```{r}
 
 baby_data %>% 
@@ -52,13 +56,15 @@ baby_data %>%
 
 ```
 
-I will use cross validation methods to compare the my model with two models:
+#Compare your model to two others:
+
+#Using cross validation methods to compare my model with two other models:
 
 ```{r}
 
-model_2 = lm(bwt ~ blength + gaweeks, data = baby_data)
+model_2 = lm(bwt ~ blength + gaweeks, data = baby_data) # Using length at birth and gestational age as predictors (main effects only)
 
-model_3 = lm(bwt ~ bhead * blength *babysex, data = baby_data)
+model_3 = lm(bwt ~ bhead + babysex + blength + bhead * babysex * blength, data = baby_data) #using head circumference, length, sex, and all interactions (including the three-way interaction) between these
 
 ```
 Cross validation
@@ -127,3 +133,17 @@ cross_validation %>%
     y = "RMSE"
   )
 ```
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
