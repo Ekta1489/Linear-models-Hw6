@@ -91,7 +91,7 @@ cross_validation =
       train, ~ lm(bwt ~ blength + gaweeks, data = .x)
       ),
     model_3 = map(
-      train, ~ lm(bwt ~ bhead * blength *babysex, data = .x)
+      train, ~ lm(bwt ~ bhead + babysex + blength + bhead * babysex * blength, data = .x)
       ),
     model_1 = map(
       train, ~ lm(bwt ~ gaweeks + babysex + momage + mrace  + wtgain + smoken, data = .x)
