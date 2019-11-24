@@ -172,4 +172,44 @@ weather_df =
   select(name, id, everything())
 
 ```
+#The output from the code below shows results from fitting simple linear regression
+
+```{r}
+
+lm(tmax ~ tmin, data = weather_df) %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
+
+```
+#Now writing a function to generate our bootstrap samples. 
+
+```{r}
+
+boot_sample = function(weather_df) {
+  sample_frac(weather_df, replace = TRUE)
+}
+
+```
+#We should also do a quick check to see if this is working.
+
+```{r}
+
+boot_sample(weather_df) %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm")
+
+```
+#Doing this for 5000 bootstrap samples
+
+```{r}
+
+boot_straps = 
+ data_frame(
+    strap_number = 1:5000,
+    strap_sample = rerun(5000, boot_sample(weather_df))
+  )
+```
+
+
 
