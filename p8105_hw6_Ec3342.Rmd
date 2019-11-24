@@ -211,5 +211,75 @@ boot_straps =
   )
 ```
 
+#Analyzing bootstrap samples
+
+```{r}
+
+bootstrap_results = 
+  boot_straps %>% 
+  mutate(
+    models = map(strap_sample, ~lm(tmax ~ tmin, data = .x)
+                 ),
+    results = map(models, broom::glance),
+    estimate = map(models, broom::tidy)) %>% 
+  select(-strap_sample, -models) %>% 
+  unnest() %>%
+  select(
+    strap_number, r.squared, term, estimate
+  ) %>%
+  pivot_wider(
+    names_from = "term",
+    values_from = "estimate"
+  ) %>%
+  janitor::clean_names() 
+
+bootstrap_results %>% 
+  ggplot(aes(x = r_squared)) + 
+  geom_density()
+```
+
+#Using the 5000 bootstrap estimates, identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r̂2
+
+```{r}
+bootstrap_results %>% 
+  pull(r_squared) %>% 
+quantile(., probs = c(0.025, 0.975), na.rm = TRUE)
+```
+
+```{r}
+
+  bootstrap_results_2 =
+  boot_straps %>% 
+  mutate(
+    models = map(strap_sample, ~lm(tmax ~ tmin, data = .x)
+                 ),
+    results = map(models, broom::glance),
+    estimate = map(models, broom::tidy)) %>% 
+  select(-strap_sample, -models) %>% 
+  unnest() %>%
+  select(
+    strap_number, r.squared, term, estimate
+  ) %>%
+  pivot_wider(
+    names_from = "term",
+    values_from = "estimate"
+  ) %>%
+  janitor::clean_names() %>%
+  mutate(log_beta = log(intercept*tmin)) 
+
+bootstrap_results_2 %>% 
+  ggplot(aes(x = log_beta)) + 
+  geom_density()
+
+```
+
+```{r}
+
+bootstrap_results_2 %>% 
+  pull(log_beta) %>% 
+quantile(., probs = c(0.025, 0.975), na.rm = TRUE)
+
+```
+
 
 
