@@ -44,7 +44,7 @@ filter_all(
 
 As the outcome (baby's birthweight) is continuous, we can fit a linear regression model. 
 
-Baby's birthweight is associated with Gestational age in weeks. I have included baby's sex, mom's age, mom's race, mom's weight gain and average number of cigarettes smoked per day during pregnancy as these variables can be associated with baby's birthweight.
+Baby's birthweight can be associated with gestational age in weeks, baby's sex, mom's age, mom's race, mom's weight gain and average number of cigarettes smoked per day during pregnancy as these variables can be associated with baby's birthweight.
 
 ```{r}
 
