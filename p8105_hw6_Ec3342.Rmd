@@ -113,14 +113,14 @@ cross_validation =
       )
     ) %>% 
   mutate(
+    rmse_model_1 = map2_dbl(
+      model_1, test, ~ rmse(model = .x, data = .y)
+      ),
     rmse_model_2 = map2_dbl(
       model_2, test, ~ rmse(model = .x, data = .y)
       ),
     rmse_model_3 = map2_dbl(
       model_3, test, ~ rmse(model = .x, data = .y)
-      ),
-    rmse_model_1 = map2_dbl(
-      model_1, test, ~ rmse(model = .x, data = .y)
       )
     )
   
@@ -151,7 +151,7 @@ cross_validation %>%
 
 ```
 
-**Based on the violen plots above, we can see that the _third model_ i.e. the model with three way interaction is the best model because it has the minimum RMSE.**  
+**Based on the violen plots above, we can see that the _third model_ i.e., the model with three way interaction is the best model because it has the minimum RMSE.**  
 
 
 # Question 2
@@ -290,9 +290,10 @@ The 2.5% and 97.5% quantiles are 0.894 and 0.927 respectively.
     log_beta = log(intercept*tmin)
     ) 
 #Plotting a distribution of the estimates
+
 bootstrap_results_2 %>% 
   ggplot(aes(x = log_beta)) + 
-  geom_density()
+  geom_density() 
 
 ```
 
