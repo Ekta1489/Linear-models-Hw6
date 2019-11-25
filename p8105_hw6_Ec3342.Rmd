@@ -144,7 +144,7 @@ cross_validation %>%
   ggplot(aes(x = model, y = rmse, fill = model)) +
   geom_violin() + 
   labs(
-    title = "Distribution of Prediction Error Across Models",
+    title = "RMSE Across Models",
     x = "Model",
     y = "RMSE"
   )
