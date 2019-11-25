@@ -109,7 +109,7 @@ cross_validation =
       train, ~ lm(bwt ~ blength + gaweeks, data = .x)
       ),
     model_3 = map(
-      train, ~ lm(bwt ~ bhead + babysex + blength + bhead * babysex * blength, data = .x)
+      train, ~ lm(bwt ~ bhead + babysex + blength + bhead*babysex + bhead*blength + babysex*blength + bhead * babysex * blength, data = .x)
       )
     ) %>% 
   mutate(
@@ -210,10 +210,11 @@ boot_sample(weather_df) %>%
   stat_smooth(method = "lm")
 
 ```
+
 * Doing this for 5000 bootstrap samples
 
 ```{r}
-
+set.seed(10)
 boot_straps = 
  data_frame(
     strap_number = 1:5000,
@@ -262,7 +263,7 @@ quantile(., probs = c(0.025, 0.975), na.rm = TRUE) %>%
 knitr::kable(col.names = "r_squared")
 ```
 
-The 2.5% and 97.5% quantiles are 0.894 and 0.927 respectively.
+The 2.5% and 97.5% quantiles are 0.894 and 0.928 respectively.
 
 * Analyzing bootstrap samples to produce estimates of log(β̂0∗β̂1)
 
@@ -309,6 +310,6 @@ quantile(., probs = c(0.025, 0.975), na.rm = TRUE) %>%
 knitr::kable(col.names = "log(β̂0∗β̂1)")
 ```
 
-The 2.5% and 97.5% quantiles are 1.966 and 2.058 respectively.
+The 2.5% and 97.5% quantiles are 1.964 and 2.059 respectively.
 
 
